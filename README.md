@@ -1,4 +1,4 @@
-# SecondNumber.io Telegram Serverless Bot (`Movieland_af_bot`)
+# Numberland — SecondNumber.io Telegram Serverless Bot
 
 A native **Telegram Serverless** (`@tgcloud/cli`) bot integrating with the **[SecondNumber.io](https://secondnumber.io)** virtual phone number & SMS OTP verification API (`https://secondnumber.io/stubs/handler_api.php`).
 

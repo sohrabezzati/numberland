@@ -190,7 +190,7 @@ export function getWelcomeMessage(firstName, hasApiKey) {
   return [
     `👋 ${greeting}`,
     '',
-    'Welcome to the <b>SecondNumber.io Virtual SMS Bot</b> (powered natively by Telegram Serverless).',
+    'Welcome to <b>Numberland</b> — SecondNumber.io Virtual SMS Bot (powered natively by Telegram Serverless).',
     hasApiKey
       ? '🟢 <b>API Status:</b> Connected'
       : '🔴 <b>API Status:</b> Not set — send <code>/setkey YOUR_API_KEY</code>',
@@ -207,7 +207,7 @@ export function getWelcomeMessage(firstName, hasApiKey) {
 
 export function getHelpMessage(isOwner) {
   const lines = [
-    '📖 <b>SecondNumber.io Bot Guide</b>',
+    '📖 <b>Numberland Bot Guide</b>',
     '',
     '<b>1. Buy Virtual Numbers</b>',
     '• Tap <b>📱 Buy Virtual Number</b> or send /buy',
