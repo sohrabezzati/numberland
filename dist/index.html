@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>YekTap — یک‌تپ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Vazirmatn:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div id="app" class="app-shell">
+    <!-- Top Header -->
+    <header class="top-bar">
+      <div class="top-bar-inner">
+        <div class="brand-group">
+          <button id="header-back-btn" class="header-back-btn hidden" type="button" aria-label="Back">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="19" y1="12" x2="5" y2="12" />
+              <polyline points="12 19 5 12 12 5" />
+            </svg>
+          </button>
+          <div class="brand-mark" id="header-brand-mark" aria-hidden="true">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+            </svg>
+          </div>
+          <div class="brand-copy">
+            <span class="brand-title" id="header-title" data-i18n="page_title">YekTap</span>
+            <span class="brand-sub" id="header-subtitle" data-i18n="page_tagline">Everything digital, in one tap.</span>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button class="icon-pill hidden" id="header-admin-btn" type="button" aria-label="Admin dashboard" title="Admin">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+            </svg>
+          </button>
+
+          <button class="icon-pill" id="theme-toggle-btn" type="button" aria-label="Toggle theme">
+            <svg id="theme-icon-sun" class="hidden" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+            <svg id="theme-icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          </button>
+
+          <button class="lang-chip" id="open-lang-sheet" type="button" aria-label="Change language">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10" />
+              <line x1="2" y1="12" x2="22" y2="12" />
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
+            </svg>
+            <span id="header-lang-code">EN</span>
+          </button>
+
+          <button class="balance-chip" id="header-balance-btn" type="button" aria-label="Open wallet">
+            <span class="balance-value" id="header-balance">$0.00</span>
+            <span class="balance-add" aria-hidden="true">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+            </span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Floating Toast -->
+    <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+    <!-- Main Container -->
+    <main class="content">
+      <!-- MAIN WORKSPACE (Hero + 3-Tab Segmented Bar + Active Panel) -->
+      <div id="workspace-view">
+        <!-- Hero Banner Card -->
+        <section class="hero-card" aria-label="Virtual Numbers Overview">
+          <div class="hero-copy">
+            <h1 class="hero-title" data-i18n="hero_title">Virtual Numbers</h1>
+            <p class="hero-desc" data-i18n="hero_desc">One number, for your need; instant OTP delivery, live pricing &amp; real-time stock.</p>
+            <button id="hero-referral-pill" class="hero-points-btn" type="button">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="8.5" cy="7" r="4" />
+                <line x1="20" y1="8" x2="20" y2="14" />
+                <line x1="23" y1="11" x2="17" y2="11" />
+              </svg>
+              <span id="hero-points-label">Invite &amp; Earn · 0 pts</span>
+            </button>
+          </div>
+          <div class="hero-icon-box" aria-hidden="true">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20 2H4a2 2 0 0 0-2 2v18l4-4h14a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM8 11a1.25 1.25 0 1 1 0-2.5A1.25 1.25 0 0 1 8 11zm4 0a1.25 1.25 0 1 1 0-2.5A1.25 1.25 0 0 1 12 11zm4 0a1.25 1.25 0 1 1 0-2.5A1.25 1.25 0 0 1 16 11z"/>
+            </svg>
+          </div>
+        </section>
+
+        <!-- 3-Tab Segmented Bar -->
+        <nav class="segmented-bar" role="tablist" aria-label="Workspace modes">
+          <button class="seg-tab active" data-tab="manual" role="tab" aria-selected="true" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="4" y1="21" x2="4" y2="14" /><line x1="4" y1="10" x2="4" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="12" /><line x1="12" y1="8" x2="12" y2="3" />
+              <line x1="20" y1="21" x2="20" y2="16" /><line x1="20" y1="12" x2="20" y2="3" />
+              <line x1="1" y1="14" x2="7" y2="14" /><line x1="9" y1="8" x2="15" y2="8" /><line x1="17" y1="16" x2="23" y2="16" />
+            </svg>
+            <span data-i18n="tab_manual">Manual Buy</span>
+          </button>
+
+          <button class="seg-tab" data-tab="smart" role="tab" aria-selected="false" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z" />
+              <path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15z" />
+            </svg>
+            <span data-i18n="tab_smart">Smart Buy</span>
+          </button>
+
+          <button class="seg-tab" data-tab="numbers" role="tab" aria-selected="false" type="button">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="3" />
+              <circle cx="8.5" cy="12" r="1" fill="currentColor" />
+              <circle cx="12" cy="12" r="1" fill="currentColor" />
+              <circle cx="15.5" cy="12" r="1" fill="currentColor" />
+            </svg>
+            <span data-i18n="tab_numbers">My Numbers</span>
+            <span id="numbers-tab-badge" class="tab-badge hidden">0</span>
+          </button>
+        </nav>
+
+        <!-- TAB 1: MANUAL BUY (2-column selector + live servers/offers) -->
+        <section id="tab-manual" class="tab-panel active">
+          <div class="manual-grid">
+            <!-- Selector Column (Service + Country) -->
+            <div class="panel-card selector-panel">
+              <!-- Floating-label Service Selector -->
+              <div class="outlined-field-wrap">
+                <span class="floating-label" data-i18n="label_service">Service</span>
+                <button id="open-service-picker" class="outlined-trigger" type="button">
+                  <div class="trigger-main">
+                    <div id="selected-service-icon" class="service-avatar">TG</div>
+                    <div class="trigger-copy">
+                      <span id="selected-service-name" class="trigger-title">Telegram</span>
+                      <span id="selected-service-sub" class="trigger-sub">tg</span>
+                    </div>
+                  </div>
+                  <span class="trigger-search-ico" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="11" cy="11" r="8" />
+                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+
+              <!-- Floating-label Country Selector -->
+              <div class="outlined-field-wrap">
+                <span class="floating-label" data-i18n="label_country">Country</span>
+                <button id="open-country-picker" class="outlined-trigger" type="button">
+                  <div class="trigger-main">
+                    <span id="selected-country-flag" class="country-flag-lg">🇬🇧</span>
+                    <div class="trigger-copy">
+                      <span id="selected-country-name" class="trigger-title">United Kingdom</span>
+                      <span id="selected-country-price" class="trigger-sub">Loading live price…</span>
+                    </div>
+                  </div>
+                  <span class="trigger-search-ico" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="11" cy="11" r="8" />
+                      <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+
+              <!-- Quick Popular Services Strip -->
+              <div class="quick-strip-head">
+                <span class="micro-label" data-i18n="popular_services">Popular Services</span>
+                <button id="refresh-manual-btn" class="text-action" type="button">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 4 23 10 17 10" />
+                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                  </svg>
+                  <span data-i18n="refresh">Refresh</span>
+                </button>
+              </div>
+              <div id="quick-services-strip" class="pill-strip"></div>
+            </div>
+
+            <!-- Servers / Live Offers Column -->
+            <div class="panel-card offers-panel">
+              <div class="offers-head">
+                <div class="offers-title-wrap">
+                  <h2 class="panel-heading" data-i18n="operators_heading">Operators / Servers</h2>
+                  <span id="offers-count-badge" class="count-pill">0</span>
+                </div>
+                <span id="offers-selected-pair" class="pair-chip">Telegram · UK</span>
+              </div>
+
+              <!-- Summary Metric Chips (Lowest / Highest / Live Stock) -->
+              <div class="metrics-chips" id="offers-summary-chips">
+                <div class="metric-chip">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
+                    <line x1="7" y1="7" x2="7.01" y2="7" />
+                  </svg>
+                  <span id="metric-lowest">—</span>
+                </div>
+                <div class="metric-chip">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                    <polyline points="17 6 23 6 23 12" />
+                  </svg>
+                  <span id="metric-highest">—</span>
+                </div>
+                <div class="metric-chip">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                  </svg>
+                  <span id="metric-stock">—</span>
+                </div>
+              </div>
+
+              <!-- Operator / Route Cards List -->
+              <div id="offers-list" class="offers-stack"></div>
+
+              <!-- Info Callout Box -->
+              <div class="info-callout">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="10" />
+                  <line x1="12" y1="16" x2="12" y2="12" />
+                  <line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                <span data-i18n="offers_info_note">Prices and stock update in real time per service and country. Unused numbers with no SMS are automatically refunded to your wallet.</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- TAB 2: SMART BUY (Fast AI-style Best Route Finder) -->
+        <section id="tab-smart" class="tab-panel">
+          <div class="panel-card smart-card">
+            <div class="smart-head">
+              <div>
+                <h2 class="panel-heading" data-i18n="smart_title">Smart Number Finder</h2>
+                <p class="panel-sub" data-i18n="smart_sub">Pick a service and let YekTap rank the best live countries by price and availability.</p>
+              </div>
+              <button id="smart-pick-service-btn" class="soft-sky-btn" type="button">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+                <span data-i18n="all_services_btn">All Services</span>
+              </button>
+            </div>
+
+            <div id="smart-services-strip" class="pill-strip"></div>
+
+            <div class="sort-strip" id="smart-sort-strip">
+              <button class="sort-pill active" data-smart-sort="best" data-i18n="smart_best" type="button">Recommended</button>
+              <button class="sort-pill" data-smart-sort="cheapest" data-i18n="sort_price" type="button">Lowest price</button>
+              <button class="sort-pill" data-smart-sort="stock" data-i18n="sort_stock" type="button">Most stock</button>
+            </div>
+
+            <div id="smart-results-list" class="offers-stack" style="margin-top: 14px;"></div>
+          </div>
+        </section>
+
+        <!-- TAB 3: MY NUMBERS / OTP INBOX -->
+        <section id="tab-numbers" class="tab-panel">
+          <div class="panel-card">
+            <div class="section-row">
+              <div>
+                <h2 class="panel-heading" data-i18n="tab_numbers">My Numbers</h2>
+                <p class="panel-sub" data-i18n="numbers_sub">Tap any active number to receive or copy your instant SMS code</p>
+              </div>
+              <button id="refresh-orders-btn" class="icon-pill" type="button" aria-label="Refresh orders">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="23 4 23 10 17 10" />
+                  <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+                </svg>
+              </button>
+            </div>
+            <div id="orders-list" class="cards-stack"></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- WALLET & TOP-UP VIEW (Triggered from top balance pill) -->
+      <section id="wallet-view" class="hidden">
+        <div class="wallet-grid">
+          <div class="wallet-col">
+            <div class="balance-card">
+              <div class="balance-card-top">
+                <span class="balance-card-label" data-i18n="available_balance">Available Balance</span>
+                <span class="balance-card-tag">USD</span>
+              </div>
+              <div class="balance-card-amount" id="wallet-balance">$0.00</div>
+              <div class="balance-card-metrics">
+                <div class="metric">
+                  <span class="metric-label" data-i18n="points_balance_label">Points Balance</span>
+                  <span class="metric-value" id="wallet-points-balance">0 pts</span>
+                </div>
+                <div class="metric-divider"></div>
+                <div class="metric">
+                  <span class="metric-label" data-i18n="total_deposited">Total Deposited</span>
+                  <span class="metric-value" id="wallet-deposited">$0.00</span>
+                </div>
+                <div class="metric-divider"></div>
+                <div class="metric">
+                  <span class="metric-label" data-i18n="total_spent">Total Spent</span>
+                  <span class="metric-value" id="wallet-spent">$0.00</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Invite & Earn Referral Card -->
+            <div class="panel-card" id="referral-card">
+              <div class="card-head">
+                <span class="card-title" data-i18n="ref_card_title">Invite &amp; Earn Points</span>
+                <span class="rate-badge" id="ref-reward-badge">+10 pts / invite</span>
+              </div>
+              <p class="card-desc" data-i18n="ref_card_desc">Share your link with friends. Earn points on every new join and spend them to get virtual numbers for free.</p>
+
+              <div class="ref-stats-grid">
+                <div class="ref-stat-box">
+                  <span class="ref-stat-label" data-i18n="ref_stat_points">Points</span>
+                  <span class="ref-stat-value ltr-num" id="ref-stat-points-val">0</span>
+                </div>
+                <div class="ref-stat-box">
+                  <span class="ref-stat-label" data-i18n="ref_stat_friends">Invited</span>
+                  <span class="ref-stat-value ltr-num" id="ref-stat-friends-val">0</span>
+                </div>
+                <div class="ref-stat-box">
+                  <span class="ref-stat-label" data-i18n="ref_stat_rate">Rate</span>
+                  <span class="ref-stat-value ltr-num" id="ref-stat-rate-val">100/$1</span>
+                </div>
+              </div>
+
+              <div class="copy-address-row" style="margin-top:12px;">
+                <span class="copy-address-text" id="ref-invite-link">Loading…</span>
+                <button id="copy-ref-link-btn" class="copy-pill" type="button" data-i18n="pay_copy">Copy</button>
+              </div>
+
+              <button id="share-ref-link-btn" class="primary-cta" type="button" style="margin-top:10px;" data-i18n="ref_share_btn">Share Invite Link</button>
+            </div>
+
+            <div class="panel-card">
+              <div class="card-head">
+                <span class="card-title" data-i18n="topup_step1">Add Funds to Wallet</span>
+                <span class="rate-badge" id="stars-rate-label">50 Stars = $1</span>
+              </div>
+              <p class="card-desc" data-i18n="topup_enter_amt">Enter the USD amount you want to add, then select a payment method.</p>
+
+              <div class="amount-presets-row" id="wallet-amount-presets"></div>
+
+              <label class="input-label" style="margin-top: 12px;">
+                <span data-i18n="amount_usd">Amount (USD)</span>
+                <input id="topup-custom-amount" type="number" step="0.01" min="1" value="10" placeholder="10.00" />
+              </label>
+
+              <div class="micro-label" style="margin-top: 16px;" data-i18n="choose_pay_method">Payment Method</div>
+              <div class="method-stack" id="wallet-method-list"></div>
+            </div>
+          </div>
+
+          <div class="wallet-col">
+            <div class="panel-card">
+              <div class="card-head" style="margin-bottom: 12px;">
+                <span class="card-title" data-i18n="points_activity">Points Activity</span>
+              </div>
+              <div id="points-tx-list" class="surface-list"></div>
+            </div>
+
+            <div class="panel-card">
+              <div class="card-head" style="margin-bottom: 12px;">
+                <span class="card-title" data-i18n="recent_activity">Recent Activity</span>
+              </div>
+              <div id="tx-list" class="surface-list"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- OWNER-ONLY ADMIN DASHBOARD VIEW -->
+      <section id="admin-view" class="hidden">
+        <div class="panel-card" style="margin-bottom: 16px;">
+          <div class="section-row" style="margin-bottom: 14px;">
+            <div>
+              <h2 class="panel-heading" data-i18n="admin_stats_title">Platform Overview</h2>
+              <p class="panel-sub" id="admin-markup-sub">Owner dashboard</p>
+            </div>
+            <button id="refresh-admin-btn" class="icon-pill" type="button" aria-label="Refresh admin stats">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 4 23 10 17 10" />
+                <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10" />
+              </svg>
+            </button>
+          </div>
+          <div id="admin-kpi-grid" class="admin-kpi-grid"></div>
+        </div>
+
+        <div class="panel-card">
+          <div class="section-row" style="margin-bottom: 12px;">
+            <div class="offers-title-wrap">
+              <h2 class="panel-heading" data-i18n="admin_users_title">Users &amp; Wallets</h2>
+              <span id="admin-users-count" class="count-pill">0</span>
+            </div>
+            <div id="admin-pagination" class="admin-pager hidden">
+              <button id="admin-prev-btn" class="sort-pill" type="button" data-i18n="btn_prev_short">‹ Prev</button>
+              <span id="admin-page-label" class="micro-label ltr-num">1/1</span>
+              <button id="admin-next-btn" class="sort-pill" type="button" data-i18n="btn_next_short">Next ›</button>
+            </div>
+          </div>
+
+          <div class="search-field" style="margin-bottom: 12px;">
+            <svg class="search-svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+            </svg>
+            <input id="admin-user-search" type="search" data-i18n-placeholder="admin_search_ph" placeholder="Filter by Telegram User ID…" autocomplete="off" />
+          </div>
+
+          <div id="admin-users-list" class="surface-list"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Service Picker Bottom Sheet -->
+  <div id="service-sheet" class="sheet-backdrop hidden" role="dialog" aria-modal="true" aria-label="Select service">
+    <div class="sheet sheet-tall">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <h2 data-i18n="select_service">Select Service</h2>
+        <button id="close-service-sheet" class="icon-close" type="button" aria-label="Close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="sheet-search">
+        <div class="search-field">
+          <svg class="search-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input id="service-sheet-search" type="search" data-i18n-placeholder="search_services_ph" placeholder="Search services (Telegram, WhatsApp, Google…)" autocomplete="off" />
+        </div>
+      </div>
+      <div id="service-sheet-list" class="sheet-scroll"></div>
+    </div>
+  </div>
+
+  <!-- Country Picker Bottom Sheet (Shows Live Prices & Stock for Selected Service) -->
+  <div id="country-sheet" class="sheet-backdrop hidden" role="dialog" aria-modal="true" aria-label="Select country">
+    <div class="sheet sheet-tall">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <h2 data-i18n="select_country">Select Country</h2>
+        <button id="close-country-sheet" class="icon-close" type="button" aria-label="Close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div class="sheet-search">
+        <div class="search-field">
+          <svg class="search-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+          <input id="country-sheet-search" type="search" data-i18n-placeholder="search_countries_ph" placeholder="Search 198 countries…" autocomplete="off" />
+        </div>
+      </div>
+      <div id="country-sheet-list" class="sheet-scroll"></div>
+    </div>
+  </div>
+
+  <!-- Language Picker Bottom Sheet -->
+  <div id="lang-sheet" class="sheet-backdrop hidden" role="dialog" aria-modal="true" aria-label="Select language">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <h2 data-i18n="language_title">Language</h2>
+        <button id="close-lang-sheet" class="icon-close" type="button" aria-label="Close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div id="lang-sheet-list"></div>
+    </div>
+  </div>
+
+  <!-- Payment Session Bottom Sheet -->
+  <div id="pay-sheet" class="sheet-backdrop hidden" role="dialog" aria-modal="true" aria-label="Payment order">
+    <div class="sheet sheet-tall">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <h2 id="pay-sheet-title">Payment Order</h2>
+        <button id="close-pay-sheet" class="icon-close" type="button" aria-label="Close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div id="pay-sheet-body" class="sheet-scroll"></div>
+    </div>
+  </div>
+
+  <!-- Purchase Confirmation Bottom Sheet -->
+  <div id="buy-sheet" class="sheet-backdrop hidden" role="dialog" aria-modal="true" aria-label="Confirm activation">
+    <div class="sheet">
+      <div class="sheet-handle"></div>
+      <div class="sheet-head">
+        <h2 data-i18n="confirm_activation">Confirm Activation</h2>
+        <button id="close-buy-sheet" class="icon-close" type="button" aria-label="Close">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+            <line x1="18" y1="6" x2="6" y2="18" />
+            <line x1="6" y1="6" x2="18" y2="18" />
+          </svg>
+        </button>
+      </div>
+      <div id="buy-sheet-body" class="confirm-body"></div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
